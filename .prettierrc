@@ -1,0 +1,26 @@
+{
+  "arrowParens": "avoid",
+  "trailingComma": "none",
+  "singleQuote": false,
+  "semi": true,
+  "importOrder": [
+    "^react$",
+    "<THIRD_PARTY_MODULES>",
+    "^@constants(/.*)?$",
+    "^@shared/(.*)$",
+    "^@shared-.*/(.*)$",
+    "^@tokens/(.*)$",
+    "^@app/(.*)$",
+    "^@fermions",
+    "^@atoms",
+    "^@molecules",
+    "^@organisms",
+    "^@templates",
+    "^@components/(.*)$",
+    "^[./]"
+  ],
+  "plugins": ["prettier-plugin-svelte"],
+  "overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true
+}
