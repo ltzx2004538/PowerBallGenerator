@@ -10,8 +10,10 @@
 		"sourceMap": true,
 		"strict": true,
 		"moduleResolution": "bundler",
+		"allowImportingTsExtensions": true,
 		"paths":{
-			"$components/*": ["src/components/*"] 
+			"$components/*": ["src/components/*"],
+			"$utilities/*": ["src/utilities/*"],
 		}
 	}
 	// Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias

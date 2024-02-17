@@ -1,5 +1,6 @@
 <script lang="ts">
   import PowerBall from "$components/PowerBall.svelte";
+  import { getRandomInt } from "$utilities/utilities.ts";
 
   interface powerball {
     id: number;
@@ -12,6 +13,15 @@
   const maxNumber = 7;
   let selectedPowerBall: number | null;
   let selectedNumbers: Array<powerball> = [];
+  const result = (() => {
+    const result = [];
+    for (let i = 0; i < maxNumber; i++) {
+      result.push({
+        id: i
+      });
+    }
+    return result;
+  })();
 
   const getPowerBallObject = (total: number) => {
     const result = [];
@@ -28,39 +38,33 @@
 
   let powerBalls = getPowerBallObject(totalPowerBalls);
   let powerNumbers = getPowerBallObject(totalNumber);
-
-  $: selections = `${
-    selectedNumbers.length
-      ? selectedNumbers
-          .map(s => s.value)
-          .sort((a, b) => a - b)
-          .join(" ")
-      : ""
-  } ${selectedPowerBall ?? " "}`;
+  selectedNumbers = [];
 
   const getIndexOfNumber = (id: number) => {
     const index = selectedNumbers.findIndex(sn => sn.id === id);
     return index;
   };
 
+  const sortNumbers = () => {
+    selectedNumbers = selectedNumbers.sort((a, b) => a.value - b.value);
+  };
+
   const onClickNumbers = (event: any) => {
     const id = event.detail.id;
-    if (selectedNumbers.length >= 7) {
-      return;
-    }
-    powerNumbers[id].selected = !powerNumbers[id].selected;
     const existNumberIndex = getIndexOfNumber(id);
     if (existNumberIndex >= 0) {
       selectedNumbers.splice(existNumberIndex, 1);
-    } else {
+      powerNumbers[id].selected = false;
+    } else if (selectedNumbers.length < 7) {
       selectedNumbers.push(powerNumbers[id]);
+      powerNumbers[id].selected = true;
     }
-    selectedNumbers = selectedNumbers.sort((a, b) => a - b);
+    sortNumbers();
   };
 
   const onClickPowerball = (event: any) => {
     const id = event.detail.id;
-	powerBalls = getPowerBallObject(totalPowerBalls);
+    powerBalls = getPowerBallObject(totalPowerBalls);
     selectedPowerBall = powerBalls[id].value;
     powerBalls[id].selected = true;
   };
@@ -71,12 +75,63 @@
     selectedNumbers = [];
     selectedPowerBall = null;
   };
+
+  const handleRandom = () => {
+    const runRandomTimes = maxNumber - selectedNumbers.length;
+    const selectedSet = new Set(selectedNumbers.map(s => s.id));
+    let randomSet = new Set<number>();
+    for (let i = 0; i < runRandomTimes; i++) {
+      const random = getRandomInt(0, 34);
+      if (!selectedSet.has(random) && !randomSet.has(random)) {
+        randomSet.add(random);
+      } else {
+        i -= 1;
+      }
+    }
+    randomSet.forEach(randomNumber => {
+      const randomBall = powerNumbers[randomNumber];
+      powerNumbers[randomNumber].selected = true;
+      selectedNumbers.push(randomBall);
+      sortNumbers();
+    });
+  };
 </script>
 
 <main>
   <div class="powerballs-container">
-    <div>{selections}</div>
-    <button on:click={handleClear}> clear </button>
+    <div class="powerballs-container__selected-numbers">
+      {#each result as pickerNumber (pickerNumber.id)}
+        <div class="picked-number-container">
+          {#if selectedNumbers[pickerNumber.id]?.value}
+            <span class="picked-number-container__number">
+              {selectedNumbers[pickerNumber.id]?.value}</span
+            >
+          {/if}
+        </div>
+      {/each}
+      <div class="picked-number-container">
+        {#if selectedPowerBall}
+          <span class="picked-number-container__number">
+            {selectedPowerBall}</span
+          >
+        {/if}
+      </div>
+    </div>
+    <div class="actions">
+      <button
+        class="actions__button action-button--random"
+        on:click={handleRandom}
+      >
+        random
+      </button>
+      <button
+        class="actions__button action-button--clear"
+        on:click={handleClear}
+      >
+        clear
+      </button>
+    </div>
+
     <div class="label">select your number</div>
     <div class="numbers">
       {#each powerNumbers as number (number.id)}
@@ -98,7 +153,29 @@
     display: flex;
     flex-direction: column;
     width: 800px;
+    align-items: center;
     gap: 40px;
+    &__selected-numbers {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      .picked-number-container {
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+      }
+    }
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    .actions__button {
+      width: 100px;
+      border-radius: 5%;
+    }
   }
   .numbers {
     display: flex;
