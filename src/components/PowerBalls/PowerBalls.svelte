@@ -1,8 +1,8 @@
 <script lang="ts">
-  import PowerBall from "$components/PowerBall.svelte";
+  import PowerBall from "./PowerBall/PowerBall.svelte";
   import { getRandomInt } from "$utilities/utilities.ts";
 
-  interface powerball {
+  interface powerNumbers {
     id: number;
     value: number;
     selected: boolean;
@@ -12,7 +12,7 @@
   const totalPowerBalls = 20;
   const maxNumber = 7;
   let selectedPowerBall: number | null;
-  let selectedNumbers: Array<powerball> = [];
+  let selectedNumbers: Array<powerNumbers> = [];
   const result = (() => {
     const result = [];
     for (let i = 0; i < maxNumber; i++) {
@@ -49,6 +49,11 @@
     selectedNumbers = selectedNumbers.sort((a, b) => a.value - b.value);
   };
 
+  const addNumber = (number: number) => {
+    selectedNumbers.push(powerNumbers[number]);
+    powerNumbers[number].selected = true;
+  };
+
   const onClickNumbers = (event: any) => {
     const id = event.detail.id;
     const existNumberIndex = getIndexOfNumber(id);
@@ -56,8 +61,7 @@
       selectedNumbers.splice(existNumberIndex, 1);
       powerNumbers[id].selected = false;
     } else if (selectedNumbers.length < 7) {
-      selectedNumbers.push(powerNumbers[id]);
-      powerNumbers[id].selected = true;
+      addNumber(id);
     }
     sortNumbers();
   };
@@ -77,6 +81,7 @@
   };
 
   const handleRandom = () => {
+    handleClear();
     const runRandomTimes = maxNumber - selectedNumbers.length;
     const selectedSet = new Set(selectedNumbers.map(s => s.id));
     let randomSet = new Set<number>();
@@ -89,9 +94,7 @@
       }
     }
     randomSet.forEach(randomNumber => {
-      const randomBall = powerNumbers[randomNumber];
-      powerNumbers[randomNumber].selected = true;
-      selectedNumbers.push(randomBall);
+      addNumber(randomNumber);
       sortNumbers();
     });
   };
@@ -148,44 +151,5 @@
 </main>
 
 <style lang="scss">
-  .powerballs-container {
-    margin: auto;
-    display: flex;
-    flex-direction: column;
-    width: 800px;
-    align-items: center;
-    gap: 40px;
-    &__selected-numbers {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      .picked-number-container {
-        height: 50px;
-        width: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: 1px solid black;
-      }
-    }
-  }
-  .actions {
-    display: flex;
-    gap: 10px;
-    .actions__button {
-      width: 100px;
-      border-radius: 5%;
-    }
-  }
-  .numbers {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    width: 800px;
-  }
-  .label {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  @import './PowerBalls.scss';
 </style>

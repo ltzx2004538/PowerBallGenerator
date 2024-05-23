@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Check if package.json was modified and trigger npm install if it was
+requiresNpmInstall=$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD | grep --quiet package.json; echo $?)
+if [ "$requiresNpmInstall" = "0" ]; then
+  npm install
+fi

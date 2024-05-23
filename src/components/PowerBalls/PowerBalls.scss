@@ -1,0 +1,40 @@
+.powerballs-container {
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 800px;
+    align-items: center;
+    gap: 40px;
+    &__selected-numbers {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      .picked-number-container {
+        height: 50px;
+        width: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid black;
+      }
+    }
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    .actions__button {
+      width: 100px;
+      border-radius: 5%;
+    }
+  }
+  .numbers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 800px;
+  }
+  .label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

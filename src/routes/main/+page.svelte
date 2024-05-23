@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PowerBalls from "$components/PowerBalls.svelte";
+  import PowerBalls from "$components/PowerBalls/PowerBalls.svelte";
 </script>
 
 <main>
