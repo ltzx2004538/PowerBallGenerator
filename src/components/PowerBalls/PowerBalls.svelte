@@ -148,6 +148,7 @@
       {/each}
     </div>
   </div>
+  <span> version 1.1</span>
 </main>
 
 <style lang="scss">
