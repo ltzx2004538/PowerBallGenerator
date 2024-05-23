@@ -93,6 +93,9 @@
         i -= 1;
       }
     }
+    const randomPowerball = getRandomInt(0, 19);
+    selectedPowerBall = powerBalls[randomPowerball].value;
+    powerBalls[randomPowerball].selected = true;
     randomSet.forEach(randomNumber => {
       addNumber(randomNumber);
       sortNumbers();
@@ -147,8 +150,13 @@
         <PowerBall on:message={onClickPowerball} number={powerball} />
       {/each}
     </div>
+    <div class="footer">
+      <span class="footer__label"> version 1.1</span>
+      <span class="footer__label">powered by Yurun</span>
+    </div>
+  
   </div>
-  <span> version 1.1</span>
+ 
 </main>
 
 <style lang="scss">

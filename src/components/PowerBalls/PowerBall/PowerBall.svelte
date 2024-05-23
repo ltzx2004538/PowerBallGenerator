@@ -41,7 +41,7 @@
     border: solid 1px black;
 
 	&__selected{
-		background-color: black;
+		background-color: #3653a4;
 		color: white
 	}
   }
