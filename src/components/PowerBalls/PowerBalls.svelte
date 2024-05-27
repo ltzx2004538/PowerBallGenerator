@@ -13,6 +13,8 @@
   const maxNumber = 7;
   let selectedPowerBall: number | null;
   let selectedNumbers: Array<powerNumbers> = [];
+  let isGeneratingPowerBalls = false;
+  $: randomLabel = isGeneratingPowerBalls ? "stop" : "random";
   const result = (() => {
     const result = [];
     for (let i = 0; i < maxNumber; i++) {
@@ -80,7 +82,10 @@
     selectedPowerBall = null;
   };
 
-  const handleRandom = () => {
+  const getRandomNumber = () => {
+    if (!isGeneratingPowerBalls) {
+      return;
+    }
     handleClear();
     const runRandomTimes = maxNumber - selectedNumbers.length;
     const selectedSet = new Set(selectedNumbers.map(s => s.id));
@@ -100,6 +105,18 @@
       addNumber(randomNumber);
       sortNumbers();
     });
+  };
+
+  let interval = 0;
+  const onClickRandom = () => {
+    if (!interval) {
+      isGeneratingPowerBalls = true;
+      interval = setInterval(getRandomNumber, 100);
+    } else {
+      clearInterval(interval);
+      interval = 0;
+      isGeneratingPowerBalls = false;
+    }
   };
 </script>
 
@@ -125,17 +142,21 @@
     </div>
     <div class="actions">
       <button
-        class="actions__button action-button--random"
-        on:click={handleRandom}
+        class={`actions-button ${
+          isGeneratingPowerBalls ? "actions-button__random--animation" : ""
+        }`}
+        on:click={onClickRandom}
       >
-        random
+        {randomLabel}
       </button>
+      {#if !isGeneratingPowerBalls}
       <button
-        class="actions__button action-button--clear"
+        class="actions-button action-button--clear"
         on:click={handleClear}
       >
         clear
       </button>
+      {/if}
     </div>
 
     <div class="label">select your number</div>
@@ -154,11 +175,9 @@
       <span class="footer__label"> version 1.1</span>
       <span class="footer__label">powered by Yurun</span>
     </div>
-  
   </div>
- 
 </main>
 
 <style lang="scss">
-  @import './PowerBalls.scss';
+  @import "./PowerBalls.scss";
 </style>
