@@ -39,6 +39,7 @@
     cursor: pointer;
     background-color: transparent;
     border: solid 1px black;
+    font-size: 25px;
 
 	&__selected{
 		background-color: #3653a4;

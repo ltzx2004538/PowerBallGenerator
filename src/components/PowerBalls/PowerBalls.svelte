@@ -14,7 +14,7 @@
   let selectedPowerBall: number | null;
   let selectedNumbers: Array<powerNumbers> = [];
   let isGeneratingPowerBalls = false;
-  $: randomLabel = isGeneratingPowerBalls ? "stop" : "random";
+  $: randomLabel = isGeneratingPowerBalls ? "Stop" : "Random";
   const result = (() => {
     const result = [];
     for (let i = 0; i < maxNumber; i++) {
